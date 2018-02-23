@@ -2,7 +2,7 @@
 
 This game is developed for the research project "The Use of Music Anticipation in Games" by Ivar Troost and Twan Veldhuis.
 
-The contents of this repository, with exception of the file "lightning.png" and this readme notice are licenced by the MIT licence (LICENCE.md)  The MIT licence notice should be included in all source files.
+The contents of this repository, with exception of the file "lightning.png" and certain code obtained from StackOverflow are licenced by the MIT licence (LICENCE.md). 
 
 This repository contains two main independent branches (tags):  
 
