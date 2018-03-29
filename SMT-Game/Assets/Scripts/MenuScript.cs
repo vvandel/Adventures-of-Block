@@ -76,7 +76,7 @@ public class MenuScript : MonoBehaviour {
         if(state == "game")
         {
             Log.EndAttempt();
-            if (Log.Attempt < 5)
+            if (Log.Attempt < 1)
                 SceneManager.LoadScene("main");
             else
             {

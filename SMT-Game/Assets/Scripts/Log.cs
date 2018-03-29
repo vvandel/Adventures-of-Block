@@ -60,7 +60,6 @@ public static class Log {
         File.Delete(path);
         file = new StreamWriter(File.OpenWrite(path));
         IsInitialized = true;
-        
     }
 
     public static void Close()

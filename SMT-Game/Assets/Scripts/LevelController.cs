@@ -67,7 +67,7 @@ public class LevelController : MonoBehaviour {
 
     public void Finish()
     {
-        int triesLeft = 5 - Log.Attempt;
+        int triesLeft = 1 - Log.Attempt;
         if (triesLeft > 0)
             buttonText.text = "Try Again (" + triesLeft + ")";
         else
