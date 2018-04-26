@@ -22,21 +22,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class exit : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Upon entering the exit scene, the log is sent to the webserver
+	public void Start () {
+        StartCoroutine(SendLog());
+    }
+
+    IEnumerator SendLog()
+    {
+        string url = "http://www.students.science.uu.nl/~5718171/receiveLog.php";
+
+        WWWForm logForm = new WWWForm();
+        logForm.AddField("Title", Log.logTitle);
+        logForm.AddField("Content", Log.logContent);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url, logForm))
+        {
+            yield return www.Send();
+
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log("Form upload complete!");
+            }
+        }
+    }
 
     public void ClickExit()
     {

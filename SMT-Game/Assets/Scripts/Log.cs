@@ -32,7 +32,8 @@ public enum UserGroup { A, B, C, D, E, F }
 
 public static class Log {
 
-    static StreamWriter file;
+    public static string logContent;
+    public static string logTitle;
     public static bool IsInitialized { get; private set; }
     static bool sessionInProgress;
     public static bool IsSessionInProgress { get { return sessionInProgress; } }
@@ -44,27 +45,12 @@ public static class Log {
     static int score;
     public static int HighScore = -10000;
     public static int Attempt { get; private set; }
-
     public static int Tick { get { return currentTick; } }
-
-    static string logFile;
-    public static string LogPath { get { return Path.Combine(Directory.GetParent(Application.dataPath).FullName, Path.Combine("Logs", logFile)); } }
 
     public static void Initialize(string outFile)
     {
-        logFile = outFile;
-        string root = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs");
-        if (!Directory.Exists(root))
-            Directory.CreateDirectory(root);
-        string path = LogPath;
-        File.Delete(path);
-        file = new StreamWriter(File.OpenWrite(path));
         IsInitialized = true;
-    }
-
-    public static void Close()
-    {
-        file.Close();
+        logTitle = outFile;
     }
 
     public static void StartSession(UserGroup userGroup, int id)
@@ -73,16 +59,14 @@ public static class Log {
         if (sessionInProgress)
             throw new System.InvalidOperationException("A session is already in progress");
         sessionInProgress = true;
-        file.WriteLine(userGroup.ToString() + id + " " + System.DateTime.Now.ToString());
-        file.WriteLine();
+        logContent = "START " + System.DateTime.Now.ToString() + "\r\nGroup: " + userGroup.ToString() + "\r\nId: " + id;
     }
 
     public static void EndAttempt()
     {
-        file.WriteLine("Score: " + score);
-        if (score > HighScore)
-            HighScore = score;
-        file.WriteLine();
+        logContent += "\r\nScore: " + score + "\r\n";
+        //if (score > HighScore)
+        HighScore = score;
     }
 
     public static void NextTick()
@@ -92,10 +76,10 @@ public static class Log {
 
     public static void EndSession()
     {
-        file.WriteLine("High Score: " + HighScore);
-        file.WriteLine("END " + System.DateTime.Now.ToString());
-        file.Close();
+        //logContent += "\r\nHigh Score: " + HighScore;
+        logContent += "\r\n\r\nEND " + System.DateTime.Now.ToString();
 
+        /*
         // CREATE HASH OF ALL ABOVE TEXT
         byte[] text;
         using (var md5 = MD5.Create())
@@ -107,14 +91,17 @@ public static class Log {
         }
         string hash = ToHex(text, false);
 
-        /* ADD HASH TO END OF FILE (MASKED AS "SEED")
+        // ADD HASH TO END OF FILE (MASKED AS "SEED")
         // CAN BE CHECKED BY REMOVING LAST LINE AND UPLOADING HERE
         // http://onlinemd5.com/
-        */
+        //
+
         using (StreamWriter sw = File.AppendText(LogPath))
         {
             sw.WriteLine("SEED " + hash);
         }
+
+        */
 
         sessionInProgress = false;
     }
@@ -131,44 +118,38 @@ public static class Log {
 
     public static void WriteHit(string str, float time, int newScore)
     {
-        file.WriteLine("#" + currentTick + " " + str + " " + (time - levelStart));
+        logContent += "\r\n#" + currentTick + " " + str + " " + (time - levelStart);
         score = newScore;
     }
 
     public static void WriteSurveyAnswer(int id, string answer)
     {
-        file.WriteLine("Q" + id + " " + answer);
+        logContent += "\r\nQ" + id + " " + answer;
     }
     public static void SetLevel(SoundMode mode, string levelName)
     {
         if (CurrentLevel != levelName || CurrentMode != mode)
         {
-            file.WriteLine("level: " + levelName);
-            file.WriteLine("mode: " + mode);
-            file.WriteLine();
+            logContent += "\r\n\r\nLevel: " + levelName;
+            logContent += "\r\nMode: " + mode + "\r\n";
 
             CurrentLevel = levelName;
             CurrentMode = mode;
             Attempt = 0;
         }
     }
-    public static void ClearLogs()
-    {
-        var files = System.IO.Directory.GetFiles(LogPath);
-        foreach (string file in files)
-            System.IO.File.Delete(file);
-    }
 
     public static void StartLevel( float time)
     {
         currentTick = 0;
         levelStart = time;
-        file.WriteLine("Attempt " + Attempt++);
+        logContent += "\r\nAttempt " + Attempt++;
     }
 
+    /*
     public static void EndLevel()
     {
-        file.WriteLine("High Score: " + HighScore);
-        file.WriteLine();
+        logContent += "\r\nHigh Score: " + HighScore + "\r\n";
     }
+    */
 }

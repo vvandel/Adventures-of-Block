@@ -61,7 +61,7 @@ public class MenuScript : MonoBehaviour {
             return;
         }
 
-        Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss", System.Globalization.CultureInfo.InvariantCulture) + ".txt");
+        Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss"));
         Log.StartSession(group, code);
         Log.SetLevel(soundOrders[(int)group][0], levelNames[0]);
         SceneManager.LoadScene("main");
@@ -80,10 +80,6 @@ public class MenuScript : MonoBehaviour {
                 SceneManager.LoadScene("main");
             else
             {
-                if (Log.IsSessionInProgress)
-                {
-                    Log.EndLevel();
-                }
                 state = levelID < 2 ? "midQ" : "endQ";
                 SceneManager.LoadScene("question");
             }
@@ -103,14 +99,8 @@ public class MenuScript : MonoBehaviour {
             state = "";
 
             Log.EndSession();
-            Log.Close();
             SceneManager.LoadScene("exit");
         }
-    }
-
-    public void OnClearLogs()
-    {
-        Log.ClearLogs();
     }
 
     Dictionary<int, UserGroup> codeDict = new Dictionary<int, UserGroup>()

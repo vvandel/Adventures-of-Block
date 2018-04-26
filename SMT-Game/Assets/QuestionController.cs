@@ -128,7 +128,7 @@ public class QuestionController : MonoBehaviour {
         skip1 = Log.CurrentMode == SoundMode.None;
         currentPage = 0;
 
-        highScoreText.text = "Highscore for previous level: " + Log.HighScore;
+        highScoreText.text = "Score for previous level: " + Log.HighScore;
         //show the first page
         ShowPage(0);
 	}
