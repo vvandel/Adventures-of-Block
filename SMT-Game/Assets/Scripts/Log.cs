@@ -28,7 +28,7 @@ using System.Collections;
 using System.Text;
 using System.Security.Cryptography;
 
-public enum UserGroup { A, B, C, D, E, F }
+public enum UserGroup { A, B, C, D}
 
 public static class Log {
 
@@ -38,7 +38,7 @@ public static class Log {
     static bool sessionInProgress;
     public static bool IsSessionInProgress { get { return sessionInProgress; } }
     public static string CurrentLevel { get; private set; }
-    public static SoundMode CurrentMode { get; private set; }
+    public static Variation CurrentMode { get; private set; }
     public static UserGroup UserGroup { get; private set; }
     static int currentTick = 0;
     static float levelStart;
@@ -53,13 +53,13 @@ public static class Log {
         logTitle = outFile;
     }
 
-    public static void StartSession(UserGroup userGroup, int id)
+    public static void StartSession(UserGroup userGroup)
     {
         UserGroup = userGroup;
         if (sessionInProgress)
             throw new System.InvalidOperationException("A session is already in progress");
         sessionInProgress = true;
-        logContent = "START " + System.DateTime.Now.ToString() + "\r\nGroup: " + userGroup.ToString() + "\r\nId: " + id;
+        logContent = "START " + System.DateTime.Now.ToString() + "\r\nGroup: " + userGroup.ToString();
     }
 
     public static void EndAttempt()
@@ -126,7 +126,7 @@ public static class Log {
     {
         logContent += "\r\nQ" + id + " " + answer;
     }
-    public static void SetLevel(SoundMode mode, string levelName)
+    public static void SetLevel(Variation mode, string levelName)
     {
         if (CurrentLevel != levelName || CurrentMode != mode)
         {

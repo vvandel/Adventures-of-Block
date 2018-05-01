@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour {
     float speed;
 
     [SerializeField]
-    Text scoreText, tickText;
+    Text scoreText, tickText, groupText;
 
     int lastTick;
     int prevScore = 0;
@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
         rbody = GetComponent<Rigidbody2D>();
         initialPosition = rbody.position;
+        groupText.text = "Group: " + Log.UserGroup.ToString();
 	}
 	
 	// Update is called once per frame

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum SoundMode
+public enum Variation
 {
-    None, Beat, Generated
+    None, Video, Slow, Fast
 }
 
 public class Level : MonoBehaviour {
@@ -14,7 +14,7 @@ public class Level : MonoBehaviour {
 
     [SerializeField]
     //protected SoundMode soundMode = SoundMode.Generated;
-    protected SoundMode soundMode = SoundMode.Generated;
+    protected Variation soundMode = Variation.None;
     protected static float tickDuration = 1f; // 1 = 120bpm
     protected float nextTick;
 
@@ -54,7 +54,7 @@ public class Level : MonoBehaviour {
         bomb.GetComponent<BombControllerScript>().SetProperties(radius, delay, teleDuration * tickDuration);
         bomb.gameObject.SetActive(true);
 
-        if (soundMode==SoundMode.Generated)
+        if (soundMode==Variation.Slow)
             music.StartBombCue(delay, x);
         
         return bomb;
@@ -68,7 +68,7 @@ public class Level : MonoBehaviour {
         cloud.GetComponent<CloudScript>().SetProperties(1, waitTime, thunderTime);
         cloud.gameObject.SetActive(true);
 
-        if (soundMode == SoundMode.Generated)
+        if (soundMode == Variation.Slow)
             music.StartCloudCue((halfDuration) ? 4 * tickDuration : 8 * tickDuration, x);
         
         return cloud;
@@ -77,7 +77,7 @@ public class Level : MonoBehaviour {
     protected void StartFlood()
     {
         water.State = WaterState.Flood;
-        if (soundMode == SoundMode.Generated)
+        if (soundMode == Variation.Slow)
         {
             music.StartFloodCue();
             music.FadeOutBGMusic();
@@ -87,7 +87,7 @@ public class Level : MonoBehaviour {
     protected void EndFlood()
     {
         water.State = WaterState.Ebb;
-        if (soundMode == SoundMode.Generated)
+        if (soundMode == Variation.Slow)
         {
             //music.EndFloodCue();
             music.FadeInBGMusic();
@@ -97,9 +97,9 @@ public class Level : MonoBehaviour {
 
     protected void PlayBackground()
     {
-        if (soundMode == SoundMode.Generated)
+        if (soundMode == Variation.Fast)
             music.PlayBackground();
-        if (soundMode == SoundMode.Beat)
+        if (soundMode == Variation.Video)
             music.PlayBeat();
     }
 

@@ -124,8 +124,8 @@ public class QuestionController : MonoBehaviour {
             questions[i].optionText = optionTexts[optionSelections[i]];
         }
         questions[13].contentType = UnityEngine.UI.InputField.ContentType.IntegerNumber;
-        Qpages = MenuScript.state == "endQ" ? 6 : (Log.CurrentMode == SoundMode.None ? 1 : 2);
-        skip1 = Log.CurrentMode == SoundMode.None;
+        Qpages = MenuScript.state == "endQ" ? 6 : (Log.CurrentMode == Variation.None ? 1 : 2);
+        skip1 = Log.CurrentMode == Variation.None;
         currentPage = 0;
 
         highScoreText.text = "Score for previous level: " + Log.HighScore;

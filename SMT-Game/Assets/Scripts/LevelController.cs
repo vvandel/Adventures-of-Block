@@ -31,7 +31,7 @@ public class LevelController : MonoBehaviour {
     string levelToLoad;
 
     [SerializeField]
-    SoundMode soundMode;
+    Variation soundMode;
 
     [SerializeField]
     UnityEngine.UI.Text buttonText;
