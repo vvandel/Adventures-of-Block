@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 using System;
 
 public class Disclaimer : MonoBehaviour {
@@ -12,7 +11,7 @@ public class Disclaimer : MonoBehaviour {
     {
         Toggle agreeToggle = FindObjectOfType<Toggle>();
         if (agreeToggle.isOn){
-            SceneManager.LoadScene("menu");
+            SceneManager.LoadScene("explanation");
         }
     }
 }

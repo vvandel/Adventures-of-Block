@@ -13,7 +13,7 @@ public class TestLevel : Level
         PlayBackground();
         yield return WaitTick(4);
         //4
-        var cloud1 = spawnCloud(-0.5f, 0.05f, 1, 2, 2);
+        var cloud1 = spawnCloud(-0.5f, 1, 1, 2, 2);
         yield return WaitTick(4);
         //8
         var star3 = stars.Spawn(v2(-0.2f, 1f), true);
