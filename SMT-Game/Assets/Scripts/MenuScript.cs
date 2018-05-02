@@ -35,7 +35,7 @@ public class MenuScript : MonoBehaviour {
     public static string state = "";
     public static int QuestionsAnswered = 0;
     public static int levelID = 0;
-    public static string[] levelNames = new string[] { "Level1", "Cloudtopia" , "Bombmania" };
+    public static string[] levelNames = new string[] { "Level1", "Cloudtopia", "Bombmania" };
     public static Variation[][] soundOrders = new Variation[][]
     {
         new Variation[] { Variation.None, Variation.None, Variation.None },
@@ -43,9 +43,9 @@ public class MenuScript : MonoBehaviour {
         new Variation[] { Variation.Slow, Variation.Slow, Variation.Slow },
         new Variation[] { Variation.Fast, Variation.Fast, Variation.Fast }
     };
-    
 
-	public void OnButton()
+
+    public void OnButton()
     {
         InputField codeField = FindObjectOfType<InputField>();
 
@@ -66,6 +66,29 @@ public class MenuScript : MonoBehaviour {
         Log.SetLevel(soundOrders[(int)group][0], levelNames[0]);
         SceneManager.LoadScene("main");
         state = "game";
+    }
+
+    public void OnTrialButton()
+    {
+        InputField codeField = FindObjectOfType<InputField>();
+
+        UserGroup group;
+        try
+        {
+            int code = int.Parse(codeField.text);
+            group = codeDict[code];
+        }
+        catch
+        {
+            System.Random rnd = new System.Random();
+            group = codeDict[rnd.Next(1, 5)];
+        }
+
+        Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss"));
+        Log.StartSession(group);
+        Log.SetLevel(soundOrders[(int)group][0], "TestLevel");
+        SceneManager.LoadScene("main");
+        state = "trial";
     }
 
     public void OnNext()
@@ -100,6 +123,19 @@ public class MenuScript : MonoBehaviour {
 
             Log.EndSession();
             SceneManager.LoadScene("exit");
+        }
+
+        else if (state == "trial")
+        {
+            Log.EndAttempt();
+            if (Log.Attempt < 1)
+                SceneManager.LoadScene("main");
+            else
+            {
+                SceneManager.LoadScene("menu");
+            }
+            Log.EndSession();
+            return;
         }
     }
 

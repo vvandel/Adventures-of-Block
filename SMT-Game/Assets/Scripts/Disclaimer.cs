@@ -11,7 +11,7 @@ public class Disclaimer : MonoBehaviour {
     {
         Toggle agreeToggle = FindObjectOfType<Toggle>();
         if (agreeToggle.isOn){
-            SceneManager.LoadScene("menu");
+            SceneManager.LoadScene("explanation");
         }
     }
 }

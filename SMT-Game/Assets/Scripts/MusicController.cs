@@ -68,6 +68,8 @@ public class MusicController : MonoBehaviour {
     IEnumerator PlayForDuration(int channel, float duration, float stereo = 0)
     {
         var source = GetNewSource(channel);
+        //source.volume = Volume.playerVolume;
+        source.volume = PlayerPrefs.GetFloat("Volume");
         source.pitch = 1 / Level.getTickDuration();
         if (duration == -1)
             duration = source.clip.length * Level.getTickDuration();
@@ -81,6 +83,8 @@ public class MusicController : MonoBehaviour {
     {
         var channel = 1;
         var source = GetNewSource(channel);
+        //source.volume = Volume.playerVolume;
+        source.volume = PlayerPrefs.GetFloat("Volume");
         if (explosionDelay >= 4)
         {
             yield return new WaitForSeconds(explosionDelay - 4);
@@ -96,6 +100,8 @@ public class MusicController : MonoBehaviour {
     public void PlayBackground()
     {
         bgMusic = GetNewSource(0);
+        //bgMusic.volume = Volume.playerVolume;
+        bgMusic.volume = PlayerPrefs.GetFloat("Volume");
         bgMusic.pitch = 1/Level.getTickDuration();
         bgMusic.Play();
     }
@@ -103,6 +109,8 @@ public class MusicController : MonoBehaviour {
     public void PlayBeat()
     {
         bgMusic = GetNewSource(4);
+        //bgMusic.volume = Volume.playerVolume;
+        bgMusic.volume = PlayerPrefs.GetFloat("Volume");
         bgMusic.pitch = 1 / Level.getTickDuration();
         bgMusic.Play();
     }
@@ -149,11 +157,11 @@ public class MusicController : MonoBehaviour {
 
     public void FadeOutBGMusic()
     {
-        bgFadeOut = true;
+        bgFadeOut = false;
     }
     public void FadeInBGMusic()
     {
-        bgFadeIn = true;
+        bgFadeIn = false;
     }
 
     public void StartBombCue(float explosionDelay, float stereo)
@@ -174,9 +182,9 @@ public class MusicController : MonoBehaviour {
     public void StartFloodCue()
     {
         floodMusic = GetNewSource(2);
-        floodMusic.volume = 0;
+        //floodMusic.volume = Volume.playerVolume;
+        floodMusic.volume = PlayerPrefs.GetFloat("Volume");
         floodMusic.pitch = 1 / Level.getTickDuration();
         floodMusic.Play();
-        floodFadeIn = true;
     }
 }
