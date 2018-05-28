@@ -25,6 +25,7 @@ SOFTWARE.
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class PlayerController : MonoBehaviour {
 
@@ -33,7 +34,13 @@ public class PlayerController : MonoBehaviour {
     float speed;
 
     [SerializeField]
-    Text scoreText, tickText, groupText;
+    Text tickText;
+
+    [SerializeField]
+    TextMeshProUGUI scoreText;
+        
+    [SerializeField]
+    TextMeshProUGUI groupText;
 
     int lastTick;
     int prevScore = 0;
@@ -74,8 +81,8 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(Score != prevScore)
-            scoreText.text = Score.ToString();
+        if (Score != prevScore)
+            scoreText.text = "Score: " + Score.ToString();
         if (Log.Tick != lastTick)
             tickText.text = Log.Tick.ToString();
         lastTick = Log.Tick;

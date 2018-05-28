@@ -8,15 +8,15 @@ public class Bombmania : Level
     {
         //with one second per tick, 45 second levels require 45 ticks
 
-        PlayBackground();
-        yield return WaitTick(2);
+        //PlayBackground();
+        yield return WaitTick(1);
 
         //0
         var bomb1 = spawnBomb(-0.5f, 0.05f, 3, 4, 2);
         yield return WaitTick(1);
 
         //1
-        var star1 = stars.Spawn(v2(-0.9f, 1f), true);
+        var star1 = spawnStar(-0.9f);
         yield return WaitTick(1);
 
         //2
@@ -24,7 +24,7 @@ public class Bombmania : Level
         yield return WaitTick(1);
 
         //3
-        var star2 = stars.Spawn(v2(0.9f, 1f), true);
+        var star2 = spawnStar(0.9f);
         ObjectPool.Despawn(star1, "star pool");
         yield return WaitTick(1);
 
@@ -34,7 +34,7 @@ public class Bombmania : Level
 
         //5
         ObjectPool.Despawn(star2, "star pool");
-        var star3 = stars.Spawn(v2(-0.7f, 1f), true);
+        var star3 = spawnStar(-0.7f);
         yield return WaitTick(1);
 
         //6
@@ -42,8 +42,8 @@ public class Bombmania : Level
         yield return WaitTick(1);
 
         //7
-        var star4 = stars.Spawn(v2(0.9f, 1f), true);
-        var star5 = stars.Spawn(v2(-0.9f, 1f), true);
+        var star4 = spawnStar(0.9f);
+        var star5 = spawnStar(-0.9f);
         ObjectPool.Despawn(star3, "star pool");
         yield return WaitTick(1);
 
@@ -54,15 +54,12 @@ public class Bombmania : Level
         //10
         ObjectPool.Despawn(star5, "star pool");
         StartFlood();
-        yield return WaitTick(2);
-
-        //12
-        yield return WaitTick(1);
+        yield return WaitTick(3);
 
         //13
-        var star6 = stars.Spawn(v2(0.9f, 1f), true);
-        var star7 = stars.Spawn(v2(-0.9f, 1f), true);
-        yield return WaitTick(1);
+        var star6 = spawnStar(0.9f);
+        var star7 = spawnStar(-0.9f);
+        yield return WaitTick(2);
 
         //14
         EndFlood();
@@ -86,9 +83,9 @@ public class Bombmania : Level
         //22
         var bomb5 = spawnBomb(-0.5f, 0.05f, 2, 2, 1);
         var bomb6 = spawnBomb(0.5f, 0.05f, 2, 2, 1);
-        var star8 = stars.Spawn(v2(0.9f, 1f), true);
-        var star9 = stars.Spawn(v2(0f, 1f), true);
-        var star10 = stars.Spawn(v2(-0.9f, 1f), true);
+        var star8 = spawnStar(0.9f);
+        var star9 = spawnStar(0f);
+        var star10 = spawnStar(-0.9f);
         yield return WaitTick(1);
 
         //23
@@ -105,8 +102,8 @@ public class Bombmania : Level
         spawnBomb(-0.8f, 0.05f, 2, 2, 1);
         spawnBomb(0f, 0.05f, 2, 2, 1);
         spawnBomb(0.8f, 0.05f, 2, 2, 1);
-        var star11 = stars.Spawn(v2(0.5f, 1f), true);
-        var star12 = stars.Spawn(v2(-0.5f, 1f), true);
+        var star11 = spawnStar(0.5f);
+        var star12 = spawnStar(-0.5f);
         yield return WaitTick(2);
 
         //30
@@ -120,7 +117,7 @@ public class Bombmania : Level
 
         //33
         StartFlood();
-        yield return WaitTick(1);
+        yield return WaitTick(3);
 
         //34
         ObjectPool.Despawn(star8, "star pool");
@@ -132,24 +129,24 @@ public class Bombmania : Level
 
         //36
         EndFlood();
-        var star13 = stars.Spawn(v2(0.9f, 1f), true);
+        var star13 = spawnStar(0.9f);
         var cloud5 = spawnCloud(0.8f);
         yield return WaitTick(1);
 
         //37
         var cloud3 = spawnCloud(0);
         var cloud6 = spawnCloud(0.4f);
-        var star14 = stars.Spawn(v2(0f, 1f), true);
+        var star14 = spawnStar(0f);
         yield return WaitTick(1);
 
         //38
         spawnCloud(-0.4f);
-        var star15 = stars.Spawn(v2(-0.4f, 1f), true);
+        var star15 = spawnStar(-0.4f);
         yield return WaitTick(3);
 
         //41
         var cloud4 = spawnCloud(-0.8f);
-        var star16 = stars.Spawn(v2(-0.8f, 1f), true);
+        var star16 = spawnStar(-0.8f);
         yield return WaitTick(2);
 
         //43
@@ -164,8 +161,11 @@ public class Bombmania : Level
         //45
         ObjectPool.Despawn(cloud4, "cloud pool");
 
+        yield return WaitTick(3);
+        EndFlood();
+
         //END
-        yield return WaitTick(4);
+        yield return WaitTick(2);
         yield return base.LevelScript();
     }
 }

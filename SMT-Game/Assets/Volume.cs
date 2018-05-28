@@ -19,6 +19,7 @@ public class Volume : MonoBehaviour
         }
         catch
         {
+            Debug.LogWarning("Volume not assigned, 0.5f used instead");
             volumeSlider.value = 0.5f;
         }
         bgMusic = GetComponent<AudioSource>();

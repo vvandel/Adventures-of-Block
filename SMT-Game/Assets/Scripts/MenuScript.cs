@@ -27,23 +27,48 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 public class MenuScript : MonoBehaviour {
 
     [SerializeField]
-    GameObject explain;
+    TextMeshProUGUI message;
+
+    [SerializeField]
+    Button trialButton;
+
+    [SerializeField]
+    Button experimentButton;
+
     public static string state = "";
     public static int QuestionsAnswered = 0;
     public static int levelID = 0;
     public static string[] levelNames = new string[] { "Level1", "Cloudtopia", "Bombmania" };
+    public static Boolean trialPlayed = false;
     public static Variation[][] soundOrders = new Variation[][]
     {
         new Variation[] { Variation.None, Variation.None, Variation.None },
         new Variation[] { Variation.Video, Variation.Video, Variation.Video },
         new Variation[] { Variation.Slow, Variation.Slow, Variation.Slow },
-        new Variation[] { Variation.Fast, Variation.Fast, Variation.Fast }
+        new Variation[] { Variation.Fast, Variation.Fast, Variation.Fast },
+        new Variation[] { Variation.Both, Variation.Both, Variation.Both } // CHANGED FOR TESTING PURPOSES
     };
 
+    public void Start()
+    {
+        if (trialPlayed == false)
+        {
+            message.SetText("Welcome to BlocksJourney!\r\nWe are glad that you are participating.\r\nPlease adjust the volume to a level that is pleasant to you.\r\nYou will first play a short trial level.\r\nGood luck!");
+            trialButton.interactable = true;
+            experimentButton.interactable = false;
+        }
+        else
+        {
+            message.SetText("You can now proceed to the experiment.\r\nIt will consist of three levels, each one is about 1 minute long.\r\nAfter that, please stick around to answer a few questions about your experience.\r\nGood luck!");
+            trialButton.interactable = false;
+            experimentButton.interactable = true;
+        }
+    }
 
     public void OnButton()
     {
@@ -58,7 +83,7 @@ public class MenuScript : MonoBehaviour {
         catch
         {
             System.Random rnd = new System.Random();
-            group = codeDict[rnd.Next(1, 5)];
+            group = codeDict[rnd.Next(1, 6)]; // CHANGED FOR TESTING PURPOSES
         }
 
         Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss"));
@@ -81,7 +106,7 @@ public class MenuScript : MonoBehaviour {
         catch
         {
             System.Random rnd = new System.Random();
-            group = codeDict[rnd.Next(1, 5)];
+            group = codeDict[rnd.Next(1, 6)]; // CHANGED FOR TESTING PURPOSES
         }
 
         Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss"));
@@ -103,8 +128,18 @@ public class MenuScript : MonoBehaviour {
                 SceneManager.LoadScene("main");
             else
             {
-                state = levelID < 2 ? "midQ" : "endQ";
-                SceneManager.LoadScene("question");
+                //state = levelID < 2 ? "midQ" : "endQ";
+
+                if (levelID == 2)
+                {
+                    state = "endQ";
+                    SceneManager.LoadScene("question");
+                }
+                else
+                {
+                    state = "midQ";
+                    OnNext();
+                }
             }
             return;
         }
@@ -132,6 +167,7 @@ public class MenuScript : MonoBehaviour {
                 SceneManager.LoadScene("main");
             else
             {
+                trialPlayed = true;
                 SceneManager.LoadScene("menu");
             }
             Log.EndSession();
@@ -148,5 +184,7 @@ public class MenuScript : MonoBehaviour {
         { 3, UserGroup.C },
 
         { 4, UserGroup.D },
+        
+        { 5, UserGroup.E }, // CHANGED FOR TESTING PURPOSES
     };
 }

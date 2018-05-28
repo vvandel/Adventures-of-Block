@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 [System.Serializable]
 public class Question
@@ -46,7 +47,7 @@ public class QuestionScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        var text = transform.FindChild("Text").GetComponent<Text>();
+        var text = transform.FindChild("Text").GetComponent<TextMeshProUGUI>();
         text.text = question.text;
 		if(question.options <= 0)
         {
@@ -63,7 +64,7 @@ public class QuestionScript : MonoBehaviour {
                 var child = toggleGroup.transform.GetChild(i);
                 child.GetComponent<Toggle>().isOn = false;
                 child.gameObject.SetActive(i < question.options);
-                child.FindChild("Label").GetComponent<Text>().text = question.optionText[i];
+                child.FindChild("Label").GetComponent<TextMeshProUGUI>().text = question.optionText[i];
             }
         }
 

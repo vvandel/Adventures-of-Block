@@ -30,12 +30,21 @@ public class StarScript : MonoBehaviour {
     [SerializeField]
     PlayerController player;
 
+    [SerializeField]
+    ParticleSystem starParticles;
+
+    private ParticleSystem ps;
+    protected Variation soundMode = Log.CurrentMode;
     bool isPickedUp = false;
 
     void Start()
     {
-        GetComponent<ParticleSystem>().Play();
         isPickedUp = false;
+
+        if (soundMode == Variation.Video || soundMode == Variation.Both) // CHANGED FOR TESTING PURPOSES
+        {
+            starParticles.Play();
+        }
     }
 
     void OnEnable()

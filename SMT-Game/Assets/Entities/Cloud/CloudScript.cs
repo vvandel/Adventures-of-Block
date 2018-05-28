@@ -28,16 +28,20 @@ using System.Collections;
 public class CloudScript : MonoBehaviour {
 
     GameObject lightning;
+    protected Variation soundMode = Log.CurrentMode;
 
     [SerializeField]
     float size = 5, waitTime = 1, thunderTime = 3;
+
+    [SerializeField]
+    ParticleSystem rumbleParticles;
 
     float spawn_time;
 
     public void SetProperties(float? size, float? waitTime, float? thunderTime)
     {
-        if (gameObject.activeSelf)
-            Debug.LogWarning("Adjusting cloud properties while it's active, behaviour might not be as expected");
+        //if (gameObject.activeSelf)
+            //Debug.LogWarning("Adjusting cloud properties while it's active, behaviour might not be as expected");
 
         if (size.HasValue)
             this.size = size.Value;
@@ -52,6 +56,23 @@ public class CloudScript : MonoBehaviour {
     {
         lightning = transform.GetChild(0).gameObject;
         spawn_time = Time.time;
+        PlayParticles();
+    }
+
+    public void PlayParticles()
+    {
+        if (soundMode == Variation.Video || soundMode == Variation.Both) // CHANGED FOR TESTING PURPOSES
+        {
+            rumbleParticles.Play();
+        }
+    }
+
+    public void StopParticles()
+    {
+        if (rumbleParticles.isPlaying)
+        {
+            rumbleParticles.Stop();
+        }
     }
 
     void OnEnable()
@@ -72,6 +93,7 @@ public class CloudScript : MonoBehaviour {
         }
         else if (Time.fixedTime >= spawn_time + 2 * waitTime + thunderTime)
         {
+            StopParticles();
             lightning.SetActive(true);
         }
         else if (Time.fixedTime >= spawn_time + waitTime + thunderTime)
@@ -80,6 +102,7 @@ public class CloudScript : MonoBehaviour {
         } 
         else if (Time.fixedTime >= spawn_time + waitTime)
         {
+            StopParticles();
             lightning.SetActive(true);
         }
         else

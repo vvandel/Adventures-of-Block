@@ -25,6 +25,7 @@ SOFTWARE.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class QuestionController : MonoBehaviour {
 
@@ -35,23 +36,26 @@ public class QuestionController : MonoBehaviour {
     MenuScript menu;
 
     [SerializeField]
-    UnityEngine.UI.Text highScoreText;
+    TextMeshProUGUI highScoreText;
 
-    Question[] questions = new Question[16];
+    Question[] questions = new Question[12];
 
     int Qpages = 1, currentPage = 0;
     bool skip1 = false;
 
-    int[] optionSelections = new int[] { 0, 0, 0, 0, 0, 0,
-        1, 2, 1,
-        2, 0, 0,
-        0, 2, 3,
-        2 };
-    int[] options = new int[] { 5, 5, 5, 5, 5, 5,
-        4, 0, 4,
-        0, 5, 5,
-        5, 0, 3,
-        0 };
+    int[] optionSelections = new int[] {
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0,
+        2, 3, 2
+    };
+
+    int[] options = new int[] {
+        5, 5, 5,
+        5, 5, 5,
+        5, 5, 5,
+        0, 3, 0
+    };
 
     string[][] optionTexts =
     {
@@ -63,26 +67,20 @@ public class QuestionController : MonoBehaviour {
 
     string[] qText = new string[]
     {
-        "The level was enjoyable",
-        "The level was hard",
-        "I performed well in the level",
+        "The game was enjoyable",
+        "The game was hard",
+        "I performed well in the game", // Drop
 
-        "The sound fitted the level",
-        "The sound was enjoyable",
-        "The sound can be classified as music",
+        "The sound fitted the game", // animations
+        "The sound was enjoyable", // animations
+        "The sound can be classified as music", // Drop
 
-        "Which version of the game did you like better?",
-        "Why did you like that version better?",
-        "Which version do you feel you performed better in?",
+        "I believe the music helped me get higher scores in the game.", // animations
+        "The music distracted me in playing the game.", // animations
+        "I consider myself an experienced gamer",
 
-        "Why do you think you did better in said version?",
-        "I believe the music helped me get higher scores in the game.",
-        "The music distracted me in playing the game.",
-
-        "I consider myself an experienced gamer.",
         "What is your age?",
         "What is your gender?",
-
         "Is there anything else you would like to share?"
     };
 
@@ -123,9 +121,9 @@ public class QuestionController : MonoBehaviour {
             questions[i].options = options[i];
             questions[i].optionText = optionTexts[optionSelections[i]];
         }
-        questions[13].contentType = UnityEngine.UI.InputField.ContentType.IntegerNumber;
-        Qpages = MenuScript.state == "endQ" ? 6 : (Log.CurrentMode == Variation.None ? 1 : 2);
-        skip1 = Log.CurrentMode == Variation.None;
+        questions[10].contentType = UnityEngine.UI.InputField.ContentType.IntegerNumber;
+        Qpages = MenuScript.state == "endQ" ? 4 : (Log.CurrentMode == Variation.None ? 1 : 2);
+        //skip1 = Log.CurrentMode == Variation.None;
         currentPage = 0;
 
         highScoreText.text = "Score for previous level: " + Log.HighScore;

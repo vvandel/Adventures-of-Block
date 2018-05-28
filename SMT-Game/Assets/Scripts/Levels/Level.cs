@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum Variation
 {
-    None, Video, Slow, Fast
+    None, Video, Slow, Fast, Both
 }
 
 public class Level : MonoBehaviour {
@@ -11,10 +11,8 @@ public class Level : MonoBehaviour {
     protected ObjectPool bombs, clouds, stars, rafts;
     protected WaterScript water;
     protected MusicController music;
+    protected Variation soundMode = Log.CurrentMode;
 
-    [SerializeField]
-    //protected SoundMode soundMode = SoundMode.Generated;
-    protected Variation soundMode = Variation.None;
     protected static float tickDuration = 1f; // 1 = 120bpm
     protected float nextTick;
 
@@ -50,12 +48,15 @@ public class Level : MonoBehaviour {
     protected GameObject spawnBomb(float x, float y = 0.05f, float? radius = 4, float explosionDelay = 4, float? teleDuration = 2)
     {
         var bomb = bombs.Spawn(v2(x, y), false);
+
+        explosionDelay = 4;
+        teleDuration = 2;
+
         float delay = explosionDelay * tickDuration;
         bomb.GetComponent<BombControllerScript>().SetProperties(radius, delay, teleDuration * tickDuration);
         bomb.gameObject.SetActive(true);
 
-        if (soundMode==Variation.Slow)
-            music.StartBombCue(delay, x);
+        music.StartBombCue(delay, x);
         
         return bomb;
     }
@@ -63,45 +64,54 @@ public class Level : MonoBehaviour {
     protected GameObject spawnCloud(float x, float y = 1f, float? size = 1f, float? waitDuration = 2f, float? thunderDuration = 2f, bool halfDuration = false)
     {
         var cloud = clouds.Spawn(v2(x, y), true);
+
+        waitDuration = 2;
+        thunderDuration = 2;
+
         float? waitTime = waitDuration * tickDuration;
         float? thunderTime = thunderDuration * tickDuration;
         cloud.GetComponent<CloudScript>().SetProperties(1, waitTime, thunderTime);
         cloud.gameObject.SetActive(true);
 
-        if (soundMode == Variation.Slow)
-            music.StartCloudCue((halfDuration) ? 4 * tickDuration : 8 * tickDuration, x);
-        
+        music.StartCloudCue((halfDuration) ? 4 * tickDuration : 8 * tickDuration, x); // halfDuration makes it so that the lightning will only strike once
         return cloud;
+    }
+
+    protected GameObject spawnStar(float x, float y = 1.5f)
+    {
+        y = 1.5f;
+
+        var star = stars.Spawn(v2(x, y), true);
+        star.gameObject.SetActive(true);
+
+        music.StartStarCue();
+
+        return star;
     }
 
     protected void StartFlood()
     {
         water.State = WaterState.Flood;
-        if (soundMode == Variation.Slow)
-        {
-            music.StartFloodCue();
-            music.FadeOutBGMusic();
-        }
+        music.StartFloodCue();
+        //music.FadeOutBGMusic();
     }
 
     protected void EndFlood()
     {
         water.State = WaterState.Ebb;
-        if (soundMode == Variation.Slow)
-        {
-            //music.EndFloodCue();
-            music.FadeInBGMusic();
-        }
+        //music.EndFloodCue();
+        //music.FadeInBGMusic();
     }
 
-
+    /*
     protected void PlayBackground()
     {
-        if (soundMode == Variation.Fast)
+        if (soundMode == Variation.None)
             music.PlayBackground();
         if (soundMode == Variation.Video)
             music.PlayBeat();
     }
+    */
 
 
     private bool hasNextTickPassed()

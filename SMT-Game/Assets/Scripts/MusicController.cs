@@ -24,27 +24,58 @@ SOFTWARE.
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MusicController : MonoBehaviour {
-
 
     //0 = background
     //1 = bomb
     //2 = flood
     //3 = lightning
     //4 = beat
+    //5 = bomb2 (test)
 
-    protected AudioSource bgMusic;
-    protected AudioSource floodMusic;
+    Dictionary<string, int> channelDict = new Dictionary<string, int>()
+    {
+        { "bombNone", 0 },
+        { "bombVideo", 0 },
+        { "bombSlow", 1 },
+        { "bombFast", 2 },
+        { "cloudNone", 3 },
+        { "cloudVideo", 3 },
+        { "cloudSlow", 4 },
+        { "cloudFast", 5 },
+        { "starNone", 6 },
+        { "starVideo", 6 },
+        { "starSlow", 7 },
+        { "starFast", 8 },
+        { "floodNone", 9 },
+        { "floodVideo", 9 },
+        { "floodSlow", 10 },
+        { "floodFast", 11 },
 
-    bool bgFadeOut = false;
-    bool bgFadeIn = false;
-    bool floodFadeIn = false;
+        // CHANGED FOR TESTING PURPOSES
+        { "bombBoth", 2 },
+        { "cloudBoth", 5 },
+        { "starBoth", 8 },
+        { "floodBoth", 11 },
+    };
+
+    //protected AudioSource bgMusic;
+    //protected AudioSource floodMusic;
+    protected Variation soundMode = Log.CurrentMode;
+
+    //bool bgFadeOut = false;
+    //bool bgFadeIn = false;
+    //bool floodFadeIn = false;
 
     AudioSource GetNewSource(int channelId)
     {
-        if (channelId == 0 || channelId == 2 || channelId == 4)
-            return transform.GetChild(channelId).GetComponent<AudioSource>();
+        //if (channelId == 0 || channelId == 2 || channelId == 4)
+
+        //return transform.GetChild(channelId).GetComponent<AudioSource>();
+
+        /*
         else
         {
             Transform child = transform.GetChild(channelId);
@@ -54,21 +85,25 @@ public class MusicController : MonoBehaviour {
             newSource.transform.SetParent(child);
             return newSource.GetComponent<AudioSource>();
         }
+        */
+
+        Transform child = transform.GetChild(channelId);
+        GameObject baseSource = transform.GetChild(channelId).gameObject;
+        GameObject newSource = Instantiate(baseSource, Vector2.zero, Quaternion.identity) as GameObject;
+        newSource.SetActive(true);
+        newSource.transform.SetParent(child);
+        return newSource.GetComponent<AudioSource>();
     }
 
     void StopSource(AudioSource source, int channelId)
     {
         source.Stop();
-        if (channelId == 0 || channelId == 2)
-            return;
-        else
-            Destroy(source.gameObject);
+        Destroy(source.gameObject);
     }
 
     IEnumerator PlayForDuration(int channel, float duration, float stereo = 0)
     {
         var source = GetNewSource(channel);
-        //source.volume = Volume.playerVolume;
         source.volume = PlayerPrefs.GetFloat("Volume");
         source.pitch = 1 / Level.getTickDuration();
         if (duration == -1)
@@ -81,9 +116,8 @@ public class MusicController : MonoBehaviour {
 
     IEnumerator bombCue(float explosionDelay, float stereo)
     {
-        var channel = 1;
+        var channel = channelDict["bomb" + soundMode.ToString()];
         var source = GetNewSource(channel);
-        //source.volume = Volume.playerVolume;
         source.volume = PlayerPrefs.GetFloat("Volume");
         if (explosionDelay >= 4)
         {
@@ -93,14 +127,14 @@ public class MusicController : MonoBehaviour {
         {
             source.pitch = (4*(1/explosionDelay));
         }
-        
+
         source.Play();
     }
 
+    /*
     public void PlayBackground()
     {
         bgMusic = GetNewSource(0);
-        //bgMusic.volume = Volume.playerVolume;
         bgMusic.volume = PlayerPrefs.GetFloat("Volume");
         bgMusic.pitch = 1/Level.getTickDuration();
         bgMusic.Play();
@@ -109,12 +143,13 @@ public class MusicController : MonoBehaviour {
     public void PlayBeat()
     {
         bgMusic = GetNewSource(4);
-        //bgMusic.volume = Volume.playerVolume;
         bgMusic.volume = PlayerPrefs.GetFloat("Volume");
         bgMusic.pitch = 1 / Level.getTickDuration();
         bgMusic.Play();
     }
+    */
 
+    /*
     void Update()
     {
         if(bgFadeOut)
@@ -154,7 +189,9 @@ public class MusicController : MonoBehaviour {
             floodMusic.volume = 1;
         }
     }
+    */
 
+    /*
     public void FadeOutBGMusic()
     {
         bgFadeOut = false;
@@ -163,6 +200,7 @@ public class MusicController : MonoBehaviour {
     {
         bgFadeIn = false;
     }
+    */
 
     public void StartBombCue(float explosionDelay, float stereo)
     {
@@ -171,7 +209,8 @@ public class MusicController : MonoBehaviour {
 
     IEnumerator CloudCue(float duration, float stereo)
     {
-        yield return PlayForDuration(3, duration, stereo);
+        var channel = channelDict["cloud" + soundMode.ToString()];
+        yield return PlayForDuration(channel, duration, stereo);
     }
 
     public void StartCloudCue(float duration, float stereo)
@@ -181,10 +220,19 @@ public class MusicController : MonoBehaviour {
 
     public void StartFloodCue()
     {
-        floodMusic = GetNewSource(2);
-        //floodMusic.volume = Volume.playerVolume;
+        var channel = channelDict["flood" + soundMode.ToString()];
+        var floodMusic = GetNewSource(channel);
         floodMusic.volume = PlayerPrefs.GetFloat("Volume");
         floodMusic.pitch = 1 / Level.getTickDuration();
         floodMusic.Play();
     }
+
+    public void StartStarCue()
+    {
+        var channel = channelDict["star" + soundMode.ToString()];
+        var starMusic = GetNewSource(channel);
+        starMusic.volume = PlayerPrefs.GetFloat("Volume");
+        starMusic.pitch = 1 / Level.getTickDuration();
+        starMusic.Play();
+    } 
 }

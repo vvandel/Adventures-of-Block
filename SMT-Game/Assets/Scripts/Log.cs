@@ -28,7 +28,7 @@ using System.Collections;
 using System.Text;
 using System.Security.Cryptography;
 
-public enum UserGroup { A, B, C, D}
+public enum UserGroup { A, B, C, D, E } // CHANGED FOR TESTING PURPOSES
 
 public static class Log {
 

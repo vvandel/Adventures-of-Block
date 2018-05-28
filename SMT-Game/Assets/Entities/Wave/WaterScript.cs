@@ -29,8 +29,13 @@ public enum WaterState { Ebb, Flood }
 public class WaterScript : MonoBehaviour
 {
     public WaterState State { get { return state; } set { state = value; } }
+    protected Variation soundMode = Log.CurrentMode;
+
     [SerializeField]
     WaterState state = WaterState.Ebb;
+
+    [SerializeField]
+    ParticleSystem bubbleParticles;
 
     Rigidbody2D rbody = null;
 
@@ -64,5 +69,17 @@ public class WaterScript : MonoBehaviour
         float targetHeight = state == WaterState.Ebb ? ebbHeight.position.y : floodHeight.position.y;
         float speedMod = Mathf.Clamp(targetHeight - rbody.position.y , -1, 1);
         rbody.velocity = new Vector2(0, speedMod * speed);
+
+        if (state == WaterState.Flood && (soundMode == Variation.Video || soundMode == Variation.Both)) // CHANGED FOR TESTING PURPOSES
+        {
+            if (!bubbleParticles.isPlaying)
+            {
+                bubbleParticles.Play();
+            }
+        }
+        else if (state == WaterState.Ebb && bubbleParticles.isPlaying && (soundMode == Variation.Video || soundMode == Variation.Both)) // CHANGED FOR TESTING PURPOSES
+        {
+            bubbleParticles.Stop();
+        }
     }
 }
