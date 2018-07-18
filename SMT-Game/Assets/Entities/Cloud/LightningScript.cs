@@ -42,6 +42,8 @@ public class LightningScript : MonoBehaviour {
     Transform sprite1;
 
     float xoffset, spriteOffset;
+    ParticleSystem rumbleparticles;
+    protected Variation soundMode = Log.CurrentMode;
 
     void Awake()
     {
@@ -49,6 +51,7 @@ public class LightningScript : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
+        rumbleparticles = transform.GetComponentInParent<ParticleSystem>();
         //xscale = 2.6 -> sprite1.x = 0.25, x = 0
         //xscale = 1.89 -> sprite1.x = 0.083, x = -0.23
         float xscale = transform.parent.localScale.x;
@@ -57,6 +60,7 @@ public class LightningScript : MonoBehaviour {
 
         sprite1.localPosition += new Vector3(spriteOffset, 0, 0);
         transform.localPosition += new Vector3(xoffset, 0, 0);
+
         OnEnable();
 	}
 	
@@ -64,6 +68,7 @@ public class LightningScript : MonoBehaviour {
     {
         coll.enabled = true;
         endTime = Time.time + duration;
+        rumbleparticles.Stop();
     }
 
     void Update()
@@ -71,6 +76,7 @@ public class LightningScript : MonoBehaviour {
         if(Time.time >= endTime)
         {
             gameObject.SetActive(false);
+            rumbleparticles.Stop();
         }
     }
 
@@ -78,6 +84,7 @@ public class LightningScript : MonoBehaviour {
     {
         sprite1.localPosition -= new Vector3(spriteOffset, 0, 0);
         transform.localPosition -= new Vector3(xoffset, 0, 0);
+        if (soundMode == Variation.Video || soundMode == Variation.Both) rumbleparticles.Play();
     }
 
     void OnTriggerEnter2D(Collider2D other)

@@ -1,6 +1,7 @@
 
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

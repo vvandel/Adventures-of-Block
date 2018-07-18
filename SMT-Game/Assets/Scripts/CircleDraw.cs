@@ -35,8 +35,12 @@ public class CircleDraw : MonoBehaviour
     {
         lineDrawer = GetComponent<LineRenderer>();
         lineDrawer.material = material;
-        lineDrawer.SetColors(color, color);
-        lineDrawer.SetWidth(width, width); //thickness of line
+        //lineDrawer.SetColors(color, color);
+        //lineDrawer.SetWidth(width, width); //thickness of line
+        lineDrawer.startColor = color;
+        lineDrawer.endColor = color;
+        lineDrawer.startWidth = width;
+        lineDrawer.endWidth = width;
     }
 
 
@@ -47,7 +51,8 @@ public class CircleDraw : MonoBehaviour
         Vector3 pos;
         float gOx = gameObject.transform.position.x;
         float gOy = gameObject.transform.position.y;
-        lineDrawer.SetVertexCount(size);
+        //lineDrawer.SetVertexCount(size);
+        lineDrawer.numPositions = size;
         for (int i = 0; i < size; i++)
         {
             theta += (2.0f * Mathf.PI * theta_scale);

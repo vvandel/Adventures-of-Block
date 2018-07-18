@@ -69,9 +69,10 @@ public class LevelController : MonoBehaviour {
     {
         int triesLeft = 1 - Log.Attempt;
         if (triesLeft > 0)
-            buttonText.text = "Try Again (" + triesLeft + ")";
+            //buttonText.text = "Try Again (" + triesLeft + ")";
+            buttonText.text = "Continue"; // Cheap fix because it shows this string for a few frames when there are no tries left due to it not updating quick enough
         else
-            buttonText.text = "Return";
+            buttonText.text = "Continue";
         button.SetActive(true);
         background.SetActive(true);
         player.constraints |= RigidbodyConstraints2D.FreezeAll;

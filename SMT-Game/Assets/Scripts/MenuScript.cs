@@ -1,6 +1,7 @@
 ﻿/*
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,23 +28,48 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 public class MenuScript : MonoBehaviour {
 
     [SerializeField]
-    GameObject explain;
+    TextMeshProUGUI message;
+
+    [SerializeField]
+    Button trialButton;
+
+    [SerializeField]
+    Button experimentButton;
+
     public static string state = "";
     public static int QuestionsAnswered = 0;
     public static int levelID = 0;
     public static string[] levelNames = new string[] { "Level1", "Cloudtopia", "Bombmania" };
+    public static Boolean trialPlayed = false;
     public static Variation[][] soundOrders = new Variation[][]
     {
         new Variation[] { Variation.None, Variation.None, Variation.None },
         new Variation[] { Variation.Video, Variation.Video, Variation.Video },
         new Variation[] { Variation.Slow, Variation.Slow, Variation.Slow },
-        new Variation[] { Variation.Fast, Variation.Fast, Variation.Fast }
+        new Variation[] { Variation.Fast, Variation.Fast, Variation.Fast },
+        new Variation[] { Variation.Both, Variation.Both, Variation.Both } // The 'Both' variant was created to test how well the animations and audio of the same tempo match, it is not actually used in the experiment though
     };
 
+    public void Start()
+    {
+        if (trialPlayed == false)
+        {
+            message.SetText("Before we continue on to the actual experiment, please select your preferred volume level and play through the tutorial level. Once you are done with the tutorial level, you can start with the actual experiment.\r\n\r\nGood luck and have fun!");
+            trialButton.interactable = true;
+            experimentButton.interactable = false;
+        }
+        else
+        {
+            message.SetText("Well done!\r\n\r\nYou can now proceed to the experiment. It will consist of three levels, each of which will take about 1 minute. After that, please stick around to answer a few questions about your experience.\r\n\r\nGood luck and have fun!");
+            trialButton.interactable = false;
+            experimentButton.interactable = true;
+        }
+    }
 
     public void OnButton()
     {
@@ -57,12 +83,11 @@ public class MenuScript : MonoBehaviour {
         }
         catch
         {
-            System.Random rnd = new System.Random();
-            group = codeDict[rnd.Next(1, 5)];
+            //System.Random rnd = new System.Random();
+            //group = codeDict[rnd.Next(1, 5)];
+            group = Instructions.assignedGroup;
         }
 
-        Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss"));
-        Log.StartSession(group);
         Log.SetLevel(soundOrders[(int)group][0], levelNames[0]);
         SceneManager.LoadScene("main");
         state = "game";
@@ -80,8 +105,9 @@ public class MenuScript : MonoBehaviour {
         }
         catch
         {
-            System.Random rnd = new System.Random();
-            group = codeDict[rnd.Next(1, 5)];
+            //System.Random rnd = new System.Random();
+            //group = codeDict[rnd.Next(1, 5)];
+            group = Instructions.assignedGroup;
         }
 
         Log.Initialize(System.DateTime.Now.ToString("yyyyMMdd HHmmss"));
@@ -93,7 +119,7 @@ public class MenuScript : MonoBehaviour {
 
     public void OnNext()
     {
-        if (!Log.IsSessionInProgress)
+        if (!Log.IsSessionInProgress && !Log.isFreePlay)
             throw new Exception("only valid when session in progress");
 
         if(state == "game")
@@ -103,8 +129,23 @@ public class MenuScript : MonoBehaviour {
                 SceneManager.LoadScene("main");
             else
             {
-                state = levelID < 2 ? "midQ" : "endQ";
-                SceneManager.LoadScene("question");
+                if (levelID == 2)
+                {
+                    if (Log.isFreePlay)
+                    {
+                        SceneManager.LoadScene("freeplay");
+                    }
+                    else
+                    {
+                        state = "endQ";
+                        SceneManager.LoadScene("question");
+                    }
+                }
+                else
+                {
+                    state = "midQ";
+                    OnNext();
+                }
             }
             return;
         }
@@ -132,9 +173,9 @@ public class MenuScript : MonoBehaviour {
                 SceneManager.LoadScene("main");
             else
             {
+                trialPlayed = true;
                 SceneManager.LoadScene("menu");
             }
-            Log.EndSession();
             return;
         }
     }
@@ -148,5 +189,7 @@ public class MenuScript : MonoBehaviour {
         { 3, UserGroup.C },
 
         { 4, UserGroup.D },
+        
+        { 5, UserGroup.E }, // CHANGED FOR TESTING PURPOSES
     };
 }
