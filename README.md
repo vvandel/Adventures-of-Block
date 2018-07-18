@@ -1,6 +1,7 @@
 **Adventures of Block**
 
 This game was originally developed for the research project "The Use of Music Anticipation in Games" by Ivar Troost and Twan Veldhuis in 2016.
+
 Later it was adapted to be used in the Bachelor's thesis project "The effect of anticipatory cues on player performance in video games" by Victor van Andel and Chun He in 2018 (branch Masterv2)
 
 The contents of this repository, with exception of the file "lightning.png" and certain code obtained from StackOverflow are licensed by the MIT licesce (LICENSE.md).
@@ -17,7 +18,7 @@ The project as extended after the research to be released as a game.
 This contains a level definition script (non-hardcoded levels), a fail-state (health), and a changed level selection screen where users can freely pick the level.
 This branch is in an unfinished state.
 
-- Masterv2:
+- Masterv2:  
 The project as used in the Bachelor's thesis project by Victor van Andel and Chun He in 2018.
 Features four variants of the game to test different kinds of anticipatory cues, and is adapted to run as a WebGL build and send the log as a string to a php form (and miscellaneous other changes).
 
