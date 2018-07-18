@@ -49,8 +49,9 @@ public class Level : MonoBehaviour {
     {
         var bomb = bombs.Spawn(v2(x, y), false);
 
-        explosionDelay = 4;
-        teleDuration = 2;
+        explosionDelay = 4; //These values are made constant for a more consistent level design
+        //radius = 2;
+        teleDuration = 4;
 
         float delay = explosionDelay * tickDuration;
         bomb.GetComponent<BombControllerScript>().SetProperties(radius, delay, teleDuration * tickDuration);

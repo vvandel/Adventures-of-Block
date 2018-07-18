@@ -1,6 +1,7 @@
 ﻿/*
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,9 +30,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class exit : MonoBehaviour {
+    
+    private string soundModeString = Log.CurrentMode.ToString();
 
     // Upon entering the exit scene, the log is sent to the webserver
-	public void Start () {
+    public void Start () {
         StartCoroutine(SendLog());
     }
 
@@ -42,6 +45,7 @@ public class exit : MonoBehaviour {
         WWWForm logForm = new WWWForm();
         logForm.AddField("Title", Log.logTitle);
         logForm.AddField("Content", Log.logContent);
+        logForm.AddField("Variation", soundModeString);
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, logForm))
         {
@@ -56,10 +60,5 @@ public class exit : MonoBehaviour {
                 Debug.Log("Form upload complete!");
             }
         }
-    }
-
-    public void ClickExit()
-    {
-        Application.Quit();
     }
 }

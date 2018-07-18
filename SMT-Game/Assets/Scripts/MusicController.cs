@@ -1,6 +1,7 @@
 ﻿/*
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,13 +29,6 @@ using System.Collections.Generic;
 
 public class MusicController : MonoBehaviour {
 
-    //0 = background
-    //1 = bomb
-    //2 = flood
-    //3 = lightning
-    //4 = beat
-    //5 = bomb2 (test)
-
     Dictionary<string, int> channelDict = new Dictionary<string, int>()
     {
         { "bombNone", 0 },
@@ -61,32 +55,10 @@ public class MusicController : MonoBehaviour {
         { "floodBoth", 11 },
     };
 
-    //protected AudioSource bgMusic;
-    //protected AudioSource floodMusic;
     protected Variation soundMode = Log.CurrentMode;
-
-    //bool bgFadeOut = false;
-    //bool bgFadeIn = false;
-    //bool floodFadeIn = false;
 
     AudioSource GetNewSource(int channelId)
     {
-        //if (channelId == 0 || channelId == 2 || channelId == 4)
-
-        //return transform.GetChild(channelId).GetComponent<AudioSource>();
-
-        /*
-        else
-        {
-            Transform child = transform.GetChild(channelId);
-            GameObject baseSource = child.GetChild(0).gameObject;
-            GameObject newSource = Instantiate(baseSource, Vector2.zero, Quaternion.identity) as GameObject;
-            newSource.SetActive(true);
-            newSource.transform.SetParent(child);
-            return newSource.GetComponent<AudioSource>();
-        }
-        */
-
         Transform child = transform.GetChild(channelId);
         GameObject baseSource = transform.GetChild(channelId).gameObject;
         GameObject newSource = Instantiate(baseSource, Vector2.zero, Quaternion.identity) as GameObject;
@@ -130,77 +102,6 @@ public class MusicController : MonoBehaviour {
 
         source.Play();
     }
-
-    /*
-    public void PlayBackground()
-    {
-        bgMusic = GetNewSource(0);
-        bgMusic.volume = PlayerPrefs.GetFloat("Volume");
-        bgMusic.pitch = 1/Level.getTickDuration();
-        bgMusic.Play();
-    }
-
-    public void PlayBeat()
-    {
-        bgMusic = GetNewSource(4);
-        bgMusic.volume = PlayerPrefs.GetFloat("Volume");
-        bgMusic.pitch = 1 / Level.getTickDuration();
-        bgMusic.Play();
-    }
-    */
-
-    /*
-    void Update()
-    {
-        if(bgFadeOut)
-        {
-            if (bgMusic.volume > 0)
-            {
-                bgMusic.volume -= Level.getTickDuration() * Time.deltaTime;
-            }
-            else
-            {
-                bgFadeOut = false;
-            }
-        }
-        if (bgFadeIn)
-        {
-            if (bgMusic.volume < 1)
-            {
-                bgMusic.volume += Level.getTickDuration() * Time.deltaTime;
-            }
-            else
-            {
-                bgFadeIn = false;
-            }
-        }
-        if (floodFadeIn)
-        {
-            // SOUNDS BETTER WITHOUT FADE
-            //if (floodMusic.volume < 1)
-            //{
-            //    floodMusic.volume += 0.1f * Level.getTickDuration() * Time.deltaTime;
-            //}
-            //else
-            //{
-            //    floodFadeIn = false;
-            //}
-            floodFadeIn = false;
-            floodMusic.volume = 1;
-        }
-    }
-    */
-
-    /*
-    public void FadeOutBGMusic()
-    {
-        bgFadeOut = false;
-    }
-    public void FadeInBGMusic()
-    {
-        bgFadeIn = false;
-    }
-    */
 
     public void StartBombCue(float explosionDelay, float stereo)
     {

@@ -1,6 +1,7 @@
 ﻿/*
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,10 +43,13 @@ public static class Log {
     public static UserGroup UserGroup { get; private set; }
     static int currentTick = 0;
     static float levelStart;
-    static int score;
-    public static int HighScore = -10000;
+    static float score;
+    public static float totalScore;
+    static float averageScore;
+    public static float HighScore = -10000;
     public static int Attempt { get; private set; }
     public static int Tick { get { return currentTick; } }
+    public static bool isFreePlay = false;
 
     public static void Initialize(string outFile)
     {
@@ -65,8 +69,10 @@ public static class Log {
     public static void EndAttempt()
     {
         logContent += "\r\nScore: " + score + "\r\n";
-        //if (score > HighScore)
-        HighScore = score;
+        if (MenuScript.state != "trial")
+        {
+            totalScore += score;
+        }
     }
 
     public static void NextTick()
@@ -76,32 +82,14 @@ public static class Log {
 
     public static void EndSession()
     {
-        //logContent += "\r\nHigh Score: " + HighScore;
-        logContent += "\r\n\r\nEND " + System.DateTime.Now.ToString();
-
-        /*
-        // CREATE HASH OF ALL ABOVE TEXT
-        byte[] text;
-        using (var md5 = MD5.Create())
+        averageScore = totalScore / 3;
+        if (totalScore > HighScore)
         {
-            using (var stream = File.OpenRead(@LogPath))
-            {
-                text = md5.ComputeHash(stream);
-            }
+            HighScore = totalScore;
         }
-        string hash = ToHex(text, false);
-
-        // ADD HASH TO END OF FILE (MASKED AS "SEED")
-        // CAN BE CHECKED BY REMOVING LAST LINE AND UPLOADING HERE
-        // http://onlinemd5.com/
-        //
-
-        using (StreamWriter sw = File.AppendText(LogPath))
-        {
-            sw.WriteLine("SEED " + hash);
-        }
-
-        */
+        logContent += "\r\n\r\nTotal Score: " + totalScore;
+        logContent += "\r\nAverage Score: " + averageScore;
+        logContent += "\r\nEND " + System.DateTime.Now.ToString();
 
         sessionInProgress = false;
     }
@@ -145,11 +133,4 @@ public static class Log {
         levelStart = time;
         logContent += "\r\nAttempt " + Attempt++;
     }
-
-    /*
-    public static void EndLevel()
-    {
-        logContent += "\r\nHigh Score: " + HighScore + "\r\n";
-    }
-    */
 }

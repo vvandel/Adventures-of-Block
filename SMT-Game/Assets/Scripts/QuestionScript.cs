@@ -1,6 +1,7 @@
 ﻿/*
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,6 +36,7 @@ public class Question
     public string text;
     public string[] optionText = new string[5];
     public InputField.ContentType contentType = InputField.ContentType.Standard;
+    public bool isAge = false;
 }
 
 public class QuestionScript : MonoBehaviour {
@@ -43,22 +45,43 @@ public class QuestionScript : MonoBehaviour {
     Question question;
 
     [SerializeField]
-    GameObject inputField, toggleGroup;
+    GameObject inputField;
+
+    [SerializeField]
+    GameObject toggleGroup;
 
 	// Use this for initialization
 	void Start () {
         var text = transform.FindChild("Text").GetComponent<TextMeshProUGUI>();
         text.text = question.text;
-		if(question.options <= 0)
+        inputField.GetComponent<InputField>().text = "";
+        if (question.options <= 0)
         {
-            toggleGroup.SetActive(false);
-            inputField.SetActive(true);
-            inputField.GetComponent<InputField>().text = "";
+            if (question.isAge == true)
+            {
+                inputField.GetComponent<InputField>().GetComponent<RectTransform>().sizeDelta = new Vector2(100, 30);
+                inputField.GetComponent<InputField>().GetComponent<RectTransform>().anchoredPosition = new Vector2(-300, 10);
+                inputField.GetComponent<InputField>().contentType = UnityEngine.UI.InputField.ContentType.IntegerNumber;
+                inputField.GetComponent<InputField>().characterLimit = 2;
+            }
+            else
+            {
+                inputField.GetComponent<InputField>().GetComponent<RectTransform>().sizeDelta = new Vector2(700, 75);
+                inputField.GetComponent<InputField>().GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -10);
+                inputField.GetComponent<InputField>().contentType = UnityEngine.UI.InputField.ContentType.Standard;
+                inputField.GetComponent<InputField>().characterLimit = 0;
+
+
+
+                toggleGroup.SetActive(false);
+                inputField.SetActive(true);
+            }
         }
         else
         {
             toggleGroup.SetActive(true);
             inputField.SetActive(false);
+            //inputField.DeactivateInputField();
             for (int i = 0; i < 5; i++)
             {
                 var child = toggleGroup.transform.GetChild(i);
@@ -92,9 +115,4 @@ public class QuestionScript : MonoBehaviour {
         question = q;
         Start();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

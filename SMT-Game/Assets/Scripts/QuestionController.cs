@@ -1,6 +1,7 @@
 ﻿/*
 The MIT License (MIT)
 
+Copyright (c) 2018 Victor van Andel, Chun He
 Copyright (c) 2018 Twan Veldhuis, Ivar Troost
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,6 +26,7 @@ SOFTWARE.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class QuestionController : MonoBehaviour {
@@ -38,51 +40,18 @@ public class QuestionController : MonoBehaviour {
     [SerializeField]
     TextMeshProUGUI highScoreText;
 
-    Question[] questions = new Question[12];
+    [SerializeField]
+    TextMeshProUGUI clarification;
 
-    int Qpages = 1, currentPage = 0;
+    [SerializeField]
+    GameObject exampleButton;
+
+    protected Variation soundMode = Log.CurrentMode;
+    int Qpages = 1;
+    int currentPage = 0;
     bool skip1 = false;
 
-    int[] optionSelections = new int[] {
-        0, 0, 0,
-        0, 0, 0,
-        0, 0, 0,
-        2, 3, 2
-    };
-
-    int[] options = new int[] {
-        5, 5, 5,
-        5, 5, 5,
-        5, 5, 5,
-        0, 3, 0
-    };
-
-    string[][] optionTexts =
-    {
-        new string[] { "1. Strongly agree", "2. Agree", "3. Undecided", "4. Disagree", "5. Strongly disagree" },
-        new string[] { "1. Without sound","2. With the beat","3. With the music","4. No preference", "" },
-        new string[] { "", "", "", "", "" },
-        new string[] { "Male", "Female", "Other", "", "" }
-    };
-
-    string[] qText = new string[]
-    {
-        "The game was enjoyable",
-        "The game was hard",
-        "I performed well in the game", // Drop
-
-        "The sound fitted the game", // animations
-        "The sound was enjoyable", // animations
-        "The sound can be classified as music", // Drop
-
-        "I believe the music helped me get higher scores in the game.", // animations
-        "The music distracted me in playing the game.", // animations
-        "I consider myself an experienced gamer",
-
-        "What is your age?",
-        "What is your gender?",
-        "Is there anything else you would like to share?"
-    };
+    public Question[] questions;
 
     public void OnOK()
     {
@@ -94,7 +63,7 @@ public class QuestionController : MonoBehaviour {
             return;
 
         //log answers
-        if(slot1.gameObject.activeSelf) Log.WriteSurveyAnswer(currentPage * 3, s1Answer);
+        if (slot1.gameObject.activeSelf) Log.WriteSurveyAnswer(currentPage * 3, s1Answer);
         if (slot2.gameObject.activeSelf) Log.WriteSurveyAnswer(currentPage * 3 + 1, s2Answer);
         if (slot3.gameObject.activeSelf) Log.WriteSurveyAnswer(currentPage * 3 + 2, s3Answer);
 
@@ -112,24 +81,21 @@ public class QuestionController : MonoBehaviour {
             menu.OnNext();
         }
     }
-	// Use this for initialization
-	void Start () {
-        for(int i = 0; i < questions.Length; i++)
-        {
-            questions[i] = new Question();
-            questions[i].text = qText[i];
-            questions[i].options = options[i];
-            questions[i].optionText = optionTexts[optionSelections[i]];
-        }
-        questions[10].contentType = UnityEngine.UI.InputField.ContentType.IntegerNumber;
-        Qpages = MenuScript.state == "endQ" ? 4 : (Log.CurrentMode == Variation.None ? 1 : 2);
+    // Use this for initialization
+    void Start() {
+        clarification.text = null;
+        questions = Questions.getQuestions(soundMode);
+
+        float numberofQuestions = questions.Length;
+        Qpages = Mathf.CeilToInt(numberofQuestions / 3);
+
+        //Qpages = MenuScript.state == "endQ" ? 4 : (Log.CurrentMode == Variation.None ? 1 : 2);
         //skip1 = Log.CurrentMode == Variation.None;
         currentPage = 0;
-
-        highScoreText.text = "Score for previous level: " + Log.HighScore;
+        
         //show the first page
         ShowPage(0);
-	}
+    }
 
     public void ShowPage(int i)
     {
@@ -148,18 +114,27 @@ public class QuestionController : MonoBehaviour {
         }
         else slot2.gameObject.SetActive(false);
 
-        if (start + 2< questions.Length)
+        if (start + 2 < questions.Length)
         {
             slot3.gameObject.SetActive(true);
             slot3.SetQuestion(questions[start + 2]);
         }
         else slot3.gameObject.SetActive(false);
 
-        
+        if (soundMode == Variation.Video && (currentPage == 1 || currentPage == 2))
+        {
+            clarification.text = "*By animations is meant the visual animations and particles corresponding to the game events";
+            exampleButton.SetActive(true);
+        }
+        else if ((soundMode == Variation.Slow || soundMode == Variation.Fast) && (currentPage == 1 || currentPage == 2))
+        {
+            clarification.text = "*By sound effects is meant the soundtracks that are played leading up to the game events";
+            exampleButton.SetActive(true);
+        }
+        else
+        {
+            clarification.text = null;
+            exampleButton.SetActive(false);
+        }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
