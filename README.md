@@ -4,7 +4,7 @@ This game was originally developed for the research project "The Use of Music An
 
 Later it was adapted to be used in the Bachelor's thesis project "The effect of anticipatory cues on player performance in video games" by Victor van Andel and Chun He in 2018 (branch Masterv2)
 
-The contents of this repository, with exception of the file "lightning.png" and certain code obtained from StackOverflow are licensed by the MIT licesce (LICENSE.md).
+The contents of this repository, with exception of the file "lightning.png" and certain code obtained from StackOverflow are licensed by the MIT license (LICENSE.md).
 All original content by Ivar Troost and Twan Veldhuis are licensed by the MIT license.
 Later revisions and additions by Victor van Andel and Chun He are also licensed by the MIT license (only branch Masterv2).
 
